@@ -1,5 +1,9 @@
 var Category = require('../models/category');
 
+exports.index = function(req, res) {
+    res.send('NOT IMPLEMENTED: Site Home Page');
+};
+
 // Display list of all Categories.
 exports.category_list = function(req, res) {
     res.send('NOT IMPLEMENTED: Category list');
