@@ -1,13 +1,53 @@
 var Manufacturer = require('../models/manufacturer');
+var PcPart = require("../models/pcpart");
+var Category = require("../models/category");
+
+var async = require("async");
 
 // Display list of all Manufacturers.
-exports.manufacturer_list = function(req, res) {
-    res.send('NOT IMPLEMENTED: Manufacturer list');
+exports.manufacturer_list = function(req, res, next) {
+    
+    Manufacturer.find()
+        .sort({name : 1})
+        .exec(function (err, list_manufacturers) {
+            if(err) { return next(err); }
+            
+            res.render("manufacturer_list", { title: "Manufacturer List", manufacturer_list: list_manufacturers });
+        });
 };
 
 // Display detail page for a specific Manufacturer.
-exports.manufacturer_detail = function(req, res) {
-    res.send('NOT IMPLEMENTED: Manufacturer detail: ' + req.params.id);
+exports.manufacturer_detail = function(req, res, next) {
+    
+    async.parallel(
+        {
+            manufacturer: function(callback) {
+                Manufacturer.findById(req.params.id)
+                    .exec(callback)
+            },
+            manufacturer_parts: function(callback) {
+                PcPart.find({ manufacturer: req.params.id })
+                    .populate("manufacturer")
+                    .populate("manufacturer")
+                    .exec(callback)
+            },
+        }, 
+        function(err, results) {
+            if(err) { return next(err) }
+            
+            if(results.manufacturer == null) {
+                var err = new Error("Manufacturer not found");
+                err.status = 404;
+                return next(err);
+            }
+
+            res.render("manufacturer_detail", { 
+                title: results.manufacturer.title,
+                manufacturer: results.manufacturer,
+                manufacturer_parts: results.manufacturer_parts
+            });
+        }
+    );
 };
 
 // Display Manufacturer create form on GET.
