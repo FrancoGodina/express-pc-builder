@@ -1,0 +1,40 @@
+extends layout
+
+block content
+    h1 #{title}
+
+    form(method="POST" action="")
+        div.form-group
+            label(for="name") Name:
+            input#name.form-control( type="text", name="name" required="true" value=(undefined === part ? "" : part.name))
+
+            label(for="description") Description:
+            input#description.form-control(type="text", name="description" required="true" value=(undefined === part ? "" : part.description))
+
+            label(for="stock") Stock:
+                input#stock.form-control(type="number" name="stock" required="true")
+            br
+            label(for="price") Price:
+                input#price.form-control(type="number" name="price" required="true")
+            br
+            label(for="category") Category:
+            select#category.form-control( type="select" name="category" placeholder="Select category" required="true")
+                each category in categories
+                    if part
+                        option(value=category._id selected=(category._id.toString()===part.category._id.toString() ? "selected" : false) ) #{category.title}
+                    else
+                        option(value=category._id) #{category.title}
+
+            label(for="manufacturer") Manufacturer:
+            select#manufacturer.form-control( type="select" name="manufacturer" placeholder="Select manufacturer" required="true")
+                each manufacturer in manufacturers
+                    if part
+                        option(value=manufacturer._id selected=(manufacturer._id.toString() === part.manufacturer._id.toString() ? "selected" : false)) #{manufacturer.name}
+                    else
+                        option(value=manufacturer._id) #{manufacturer.name}
+        button.btn.btn-primary(type='submit') Submit
+
+    if errors
+        ul
+            for error in errors
+                li!= error.msg

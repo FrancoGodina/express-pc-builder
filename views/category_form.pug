@@ -1,0 +1,17 @@
+extends layout
+
+block content
+    h1 #{title}
+
+    form(method="POST" action="")
+        div.form-group
+            label(for="title") Title:
+            input#title.form-control( type="text", name="title" required="true" value=(undefined === category ? "" : category.title))
+            label(for="description") Description:
+            input#description.form-control( type="text", name="description" required="true" value=(undefined === description ? "" : category.description))
+        button.btn.btn-primary(type="submit") Submit
+
+    if errors
+        ul
+            for error in errors
+                li!= error.msg
