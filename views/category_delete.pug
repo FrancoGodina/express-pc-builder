@@ -1,0 +1,28 @@
+extends layout
+
+block content
+    h1 #{title}: #{category.title}
+    p= category.lifespan
+    
+    if category_parts.length > 0
+    
+        p #[strong Delete the following parts before attempting to delete this category.]
+    
+        div(style='margin-left:20px;margin-top:20px')
+    
+        h6 Parts
+    
+        dl
+        each pcpart in category_parts
+            dt
+                a(href=pcpart.url) #{pcpart.name}
+            dd #{pcpart.description}
+    
+    else
+        p Do you really want to delete this category?
+    
+        form(method='POST' action='')
+            div.form-group
+            input#categoryid.form-control(type='hidden',name='categoryid', required='true', value=category._id )
+    
+            button.btn.btn-primary(type='submit') Delete

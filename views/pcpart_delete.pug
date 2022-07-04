@@ -1,0 +1,13 @@
+extends layout
+
+block content
+    h1 #{title}: #{pcpart.name}
+    p= pcpart.lifespan
+    
+    p Do you really want to delete this Part?
+    
+    form(method='POST' action='')
+        div.form-group
+        input#pcpartid.form-control(type='hidden',name='pcpartid', required='true', value=pcpart._id )
+    
+        button.btn.btn-primary(type='submit') Delete
