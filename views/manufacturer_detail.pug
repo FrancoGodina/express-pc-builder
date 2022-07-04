@@ -3,8 +3,9 @@ extends layout
 block content
     h1= manufacturer.name
 
-    button Update
-    a(href=manufacturer.url+'/delete') Delete manufacturer
+    a(href=manufacturer.url+"/update") Update manufacturer
+
+    a(href=manufacturer.url+"/delete") Delete manufacturer
 
     p #[strong Description:] #{manufacturer.description}
 

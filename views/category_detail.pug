@@ -3,8 +3,8 @@ extends layout
 block content
     h1= category.title
 
-    button Update
-    a(href=category.url+'/delete') Delete category
+    a(href=category.url+"/update") Update Category
+    a(href=category.url+"/delete") Delete category
 
     p #[strong Description:] #{category.description}
 
