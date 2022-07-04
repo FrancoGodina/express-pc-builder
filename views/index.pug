@@ -2,4 +2,13 @@ extends layout
 
 block content
   h1= title
-  p Welcome to #{title}
+
+  if error
+    p Error getting dynamic content.
+  else
+    p The catalog has the following record counts:
+
+    ul
+      li #[strong Categories:] !{data.category_count}
+      li #[strong Manufacturers:] !{data.manufacturer_count}
+      li #[strong Parts:] !{data.pcpart_count}
