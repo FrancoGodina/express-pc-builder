@@ -4,6 +4,6 @@ block content
     h1= pcpart.name
 
     button Update
-    button Delete
+    a(href=pcpart.url+'/delete') Delete part
 
     p #[strong Description:] #{pcpart.description}

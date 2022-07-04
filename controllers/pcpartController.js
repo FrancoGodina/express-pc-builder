@@ -134,14 +134,33 @@ exports.pcpart_create_post = [
 ]
 
 // Display Pcpart delete form on GET.
-exports.pcpart_delete_get = function(req, res) {
-    res.send('NOT IMPLEMENTED: Pcpart delete GET');
+exports.pcpart_delete_get = function(req, res, next) {
+    
+    PcPart.findById(req.params.id).exec(function(err, pcpart) {
+        if(err) next(err);
+
+        if(pcpart == null) {
+            let err = new Error("Part not found. It may have been deleted, or does not exist.")
+            err.status = 404;
+            return next(err);
+        }
+
+        res.render("pcpart_delete", {
+            title: "Delete Part",
+            pcpart: pcpart
+        })
+    })
 };
 
 // Handle Pcpart delete on POST.
-exports.pcpart_delete_post = function(req, res) {
-    res.send('NOT IMPLEMENTED: Pcpart delete POST');
+exports.pcpart_delete_post = function(req, res, next) {
+    PcPart.findByIdAndRemove(req.body.pcpartid, function deletePcPart(err) {
+        if(err) return next(err);
+
+        res.redirect("/catalog/pcparts")
+    })
 };
+
 
 // Display Pcpart update form on GET.
 exports.pcpart_update_get = function(req, res) {
