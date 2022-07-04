@@ -2,6 +2,7 @@ var Category = require('../models/category');
 var Manufacturer = require("../models/manufacturer");
 var PcPart = require("../models/pcpart");
 
+const { body, validationResult } = require("express-validator");
 var async = require("async");
 
 exports.index = function(req, res) {
@@ -70,14 +71,47 @@ exports.category_detail = function(req, res, next) {
 };
 
 // Display Category create form on GET.
-exports.category_create_get = function(req, res) {
-    res.send('NOT IMPLEMENTED: Category create GET');
+exports.category_create_get = function(req, res, next) {
+    res.render("category_form", { title: "Create Category" });
 };
 
 // Handle Category create on POST.
-exports.category_create_post = function(req, res) {
-    res.send('NOT IMPLEMENTED: Category create POST');
-};
+exports.category_create_post =  [
+    body("title")
+        .trim()
+        .isLength({ min: 1 })
+        .escape()
+        .withMessage("Category name must be specified"),
+    body("description")
+        .escape()
+        .optional({ checkFalsy: true }),
+
+    (req, res, next) => {
+        const errors = validationResult(req);
+
+        if(!errors.isEmpty()) {
+            res.render("category_form", {
+                title: "Create category",
+                category: req.body,
+                isUpdating: false,
+                errors: errors.array(),
+            });
+            return;
+        }
+        else {
+            // Data from form is valid.
+            // Create a Category object with escaped and trimmed data.
+            var category = new Category({
+                title: req.body.title,
+                description: req.body.description
+            });
+            category.save(function (err) {
+                if(err) { return next(err) };
+                res.redirect(category.url)
+            })
+        }
+    }
+]
 
 // Display Category delete form on GET.
 exports.category_delete_get = function(req, res) {
