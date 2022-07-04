@@ -10,7 +10,7 @@ var ManufacturerSchema = new Schema(
 );
 
 // Virtual for manufacturer's URL
-ManufacturerSchema.virtual("url").get(function() { return "/manufacturer/" + this._id });
+ManufacturerSchema.virtual("url").get(function() { return "/catalog/manufacturer/" + this._id });
 
 // Export model
 module.exports = mongoose.model("Manufacturer", ManufacturerSchema);

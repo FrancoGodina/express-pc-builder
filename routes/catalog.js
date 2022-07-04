@@ -86,3 +86,5 @@ router.get('/pcpart/:id', pcpart_controller.pcpart_detail);
 
 // GET request for list of all pcparts.
 router.get('/pcparts', pcpart_controller.pcpart_list);
+
+module.exports = router;
