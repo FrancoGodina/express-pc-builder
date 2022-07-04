@@ -1,0 +1,12 @@
+extends layout
+
+block content
+    h1= title
+
+    ul
+        each manufacturer in manufacturer_list
+            li
+                a(href=manufacturer.url) #{manufacturer.name}
+
+        else
+            li There are no categories.

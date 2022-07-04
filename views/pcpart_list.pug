@@ -1,0 +1,13 @@
+extends layout
+
+block content
+    h1= title
+
+    ul
+        each pcpart in pcpart_list
+            li
+                a(href=pcpart.url) #{pcpart.name}
+                |    - Stock: #{pcpart.stock} - Price: $#{pcpart.price}
+
+        else
+            li There are no categories.

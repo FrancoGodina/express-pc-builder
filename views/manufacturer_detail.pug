@@ -1,0 +1,24 @@
+extends layout
+
+block content
+    h1= manufacturer.name
+
+    button Update
+    button Delete
+
+    p #[strong Description:] #{manufacturer.description}
+
+    table
+        tr
+            th Name
+            th Category
+            th Stock
+            th Price
+        each pcpart in manufacturer_parts
+            tr
+                td 
+                    a(href=pcpart.url) #{pcpart.name}
+                td 
+                    a(href=pcpart.category.url) #{pcpart.category.title}
+                td #{pcpart.stock}
+                td $ #{pcpart.price}

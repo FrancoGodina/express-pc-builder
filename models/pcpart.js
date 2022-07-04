@@ -15,7 +15,7 @@ var PcPartSchema = new Schema(
 );
 
 // Virtual for pcpart's URL
-PcPartSchema.virtual("url").get(function() { return "/catalog/components/" + this._id; });
+PcPartSchema.virtual("url").get(function() { return "/catalog/pcpart/" + this._id; });
 
 // Export model
 module.exports = mongoose.model("PcPart", PcPartSchema);

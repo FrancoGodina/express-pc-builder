@@ -2,6 +2,8 @@ var PcPart = require('../models/pcpart');
 var Category = require("../models/category");
 var Manufacturer = require('../models/manufacturer');
 
+var async = require("async");
+
 // Display list of all Pcparts.
 exports.pcpart_list = function(req, res, next) {
     
