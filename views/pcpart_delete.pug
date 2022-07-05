@@ -8,6 +8,9 @@ block content
     
     form(method='POST' action='')
         div.form-group
-        input#pcpartid.form-control(type='hidden',name='pcpartid', required='true', value=pcpart._id )
-    
+        input#pcpartid.form-control(type='hidden',name='pcpartid', required='true', value=pcpart._id)
+
+        label(for="password") Password:
+        input(type="password" name="password" id="password" required="true" )
+        br
         button.btn.btn-primary(type='submit') Delete

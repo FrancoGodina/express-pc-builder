@@ -141,38 +141,45 @@ exports.category_delete_get = function(req, res, next) {
 
 // Handle Category delete on POST.
 exports.category_delete_post = function(req, res, next) {
-    
-    async.parallel(
-        {
-            category: function(callback) {
-                Category.findById(req.params.id).exec(callback)
-            },
-            category_parts: function(callback) {
-                PcPart.find({ "category": req.params.id }).exec(callback)
-            }
-        },
-        function(err, results) {
-            if(err) return next(err);
 
-            if(results.category_parts.length > 0) {
-                res.render("category_delete", {
-                    title: "Delete Category",
-                    category: results.category,
-                    category_parts: results.category_parts
-                })
-                return;
+    if(req.body.password != process.env.ADMIN_PASSWORD) {
+        let err = new Error("The password you entered is incorrect.");
+        err.status = 401;
+        return next(err);
+    }
+    else {
+        async.parallel(
+            {
+                category: function(callback) {
+                    Category.findById(req.params.id).exec(callback)
+                },
+                category_parts: function(callback) {
+                    PcPart.find({ "category": req.params.id }).exec(callback)
+                }
+            },
+            function(err, results) {
+                if(err) return next(err);
+
+                if(results.category_parts.length > 0) {
+                    res.render("category_delete", {
+                        title: "Delete Category",
+                        category: results.category,
+                        category_parts: results.category_parts
+                    })
+                    return;
+                }
+                else {
+                    Category.findByIdAndRemove(
+                        req.body.categoryid, 
+                        function deleteCategory(err) {
+                            if(err) return next(err);
+                            res.redirect("/catalog/categories");
+                        }
+                    )
+                }
             }
-            else {
-                Category.findByIdAndRemove(
-                    req.body.categoryid, 
-                    function deleteCategory(err) {
-                        if(err) return next(err);
-                        res.redirect("/catalog/categories");
-                    }
-                )
-            }
-        }
-    )
+        )
+    }
 };
 // Display Category update form on GET.
 exports.category_update_get = function(req, res, next) {
@@ -207,34 +214,41 @@ exports.category_update_post = [
         .optional({ checkFalsy: true}),
 
     (req, res, next) => {
-        const errors = validationResult(req);
-
-        var category = new Category({
-            title: req.body.title,
-            description: req.body.description,
-            _id: req.params.id
-        });
-
-        if(!errors.isEmpty()) {
-            res.render("category_form", {
-                title: "Update category",
-                category: category,
-                isUpdating: true,
-                errors: errors.array()
-            });
-            return;
+        if(req.body.password != process.env.ADMIN_PASSWORD) {
+            let err = new Error("The password you entered is incorrect.");
+            err.status = 401;
+            return next(err);
         }
         else {
-            Category.findByIdAndUpdate(
-                req.params.id,
-                category,
-                {},
-                function(err, thecategory) {
-                    if(err) return next(err);
+            const errors = validationResult(req);
 
-                    res.redirect(thecategory.url);
-                }
-            )
+            var category = new Category({
+                title: req.body.title,
+                description: req.body.description,
+                _id: req.params.id
+            });
+
+            if(!errors.isEmpty()) {
+                res.render("category_form", {
+                    title: "Update category",
+                    category: category,
+                    isUpdating: true,
+                    errors: errors.array()
+                });
+                return;
+            }
+            else {
+                Category.findByIdAndUpdate(
+                    req.params.id,
+                    category,
+                    {},
+                    function(err, thecategory) {
+                        if(err) return next(err);
+
+                        res.redirect(thecategory.url);
+                    }
+                )
+            }
         }
     }
 ]

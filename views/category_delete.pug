@@ -22,7 +22,9 @@ block content
         p Do you really want to delete this category?
     
         form(method='POST' action='')
-            div.form-group
             input#categoryid.form-control(type='hidden',name='categoryid', required='true', value=category._id )
-    
+
+            label(for="password") Password:
+            input(type="password" name="password" id="password" required="true" )
+            br
             button.btn.btn-primary(type='submit') Delete

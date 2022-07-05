@@ -154,11 +154,18 @@ exports.pcpart_delete_get = function(req, res, next) {
 
 // Handle Pcpart delete on POST.
 exports.pcpart_delete_post = function(req, res, next) {
-    PcPart.findByIdAndRemove(req.body.pcpartid, function deletePcPart(err) {
-        if(err) return next(err);
+    if(req.body.password != process.env.ADMIN_PASSWORD) {
+        let err = new Error("The password you entered is incorrect.");
+        err.status = 401;
+        return next(err);
+    }
+    else {
+        PcPart.findByIdAndRemove(req.body.pcpartid, function deletePcPart(err) {
+            if(err) return next(err);
 
-        res.redirect("/catalog/pcparts")
-    })
+            res.redirect("/catalog/pcparts")
+        })
+    }
 };
 
 
@@ -215,65 +222,72 @@ exports.pcpart_update_post = [
     body("price", "Price must be between $0 and $999").isFloat({ min:0, max: 999 }).escape(),
 
     (req, res, next) => {
-        const errors = validationResult(req);
-        const component = new PcPart({
-            name: req.body.name,
-            manufacturer: req.body.manufacturer,
-            category: req.body.category,
-            description: req.body.description,
-            stock: req.body.stock,
-            price: req.body.price,
-            _id: req.params.id,
-        });
-        if (!errors.isEmpty()) {
-            async.parallel(
-                {
-                    categories: function (callback) {
-                        Category.find().exec(callback);
-                    },
-                    manufacturers: function (callback) {
-                        Manufacturer.find().exec(callback);
-                    },
-                },
-                function (err, results) {
-                    if (err) return next(err);
-
-                    res.render("pcpart_form", {
-                        title: "Update Part",
-                        component: component,
-                        categories: results.categories,
-                        manufacturers: results.manufacturers,
-                        isUpdating: true,
-                        errors: errors.array(),
-                    });
-                }
-            );
-
-            return;
-        } 
+        if(req.body.password != process.env.ADMIN_PASSWORD) {
+            let err = new Error("The password you entered is incorrect.");
+            err.status = 401;
+            return next(err);
+        }
         else {
-                PcPart.findByIdAndUpdate(
-                    req.params.id,
-                    component,
-                    {},
-
-                    function (err, thecomponent) {
+            const errors = validationResult(req);
+            const component = new PcPart({
+                name: req.body.name,
+                manufacturer: req.body.manufacturer,
+                category: req.body.category,
+                description: req.body.description,
+                stock: req.body.stock,
+                price: req.body.price,
+                _id: req.params.id,
+            });
+            if (!errors.isEmpty()) {
+                async.parallel(
+                    {
+                        categories: function (callback) {
+                            Category.find().exec(callback);
+                        },
+                        manufacturers: function (callback) {
+                            Manufacturer.find().exec(callback);
+                        },
+                    },
+                    function (err, results) {
                         if (err) return next(err);
 
-                        if (thecomponent) {
-                            res.redirect(thecomponent.url);
-                        }
-                        else {
-                            let err = new Error(
-                                "Part not found. It may have been deleted, or does not exist."
-                            );
-
-                            err.status = 404;
-
-                            return next(err);
-                        }
+                        res.render("pcpart_form", {
+                            title: "Update Part",
+                            component: component,
+                            categories: results.categories,
+                            manufacturers: results.manufacturers,
+                            isUpdating: true,
+                            errors: errors.array(),
+                        });
                     }
                 );
+
+                return;
+            } 
+            else {
+                    PcPart.findByIdAndUpdate(
+                        req.params.id,
+                        component,
+                        {},
+
+                        function (err, thecomponent) {
+                            if (err) return next(err);
+
+                            if (thecomponent) {
+                                res.redirect(thecomponent.url);
+                            }
+                            else {
+                                let err = new Error(
+                                    "Part not found. It may have been deleted, or does not exist."
+                                );
+
+                                err.status = 404;
+
+                                return next(err);
+                            }
+                        }
+                    );
+            }
         }
     }
 ]
