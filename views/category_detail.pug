@@ -3,13 +3,14 @@ extends layout
 block content
     h1= category.title
 
-    a(href=category.url+"/update") Update Category
-    a(href=category.url+"/delete") Delete category
+    div
+        a(href=category.url+"/update" style="margin-right: 20px") Update Category
+        a(href=category.url+"/delete") Delete category
 
     p #[strong Description:] #{category.description}
 
-    table
-        tr
+    table(class="table")
+        tr(class="table-secondary")
             th Name
             th Manufacturer
             th Stock

@@ -8,10 +8,10 @@ block content
             label(for="title") Title:
             input#title.form-control( type="text", name="title" required="true" value=(undefined === category ? "" : category.title))
             label(for="description") Description:
-            input#description.form-control( type="text", name="description" required="true" value=(undefined === description ? "" : category.description))
+            textarea#description.form-control( type="text" rows="3" name="description" required="true" value=(undefined === description ? "" : category.description))
         if isUpdating
             label(for="password") Password:
-            input#password(type="password" name="password" required="true")
+            input#password.form-group(type="password" name="password" required="true")
         button.btn.btn-primary(type="submit") Submit
 
     if errors

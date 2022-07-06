@@ -3,14 +3,13 @@ extends layout
 block content
     h1= manufacturer.name
 
-    a(href=manufacturer.url+"/update") Update manufacturer
-
+    a(href=manufacturer.url+"/update" style="margin-right: 20px") Update manufacturer
     a(href=manufacturer.url+"/delete") Delete manufacturer
 
     p #[strong Description:] #{manufacturer.description}
 
-    table
-        tr
+    table.table
+        tr.table-secondary
             th Name
             th Category
             th Stock

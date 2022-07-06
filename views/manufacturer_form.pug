@@ -8,7 +8,7 @@ block content
             label(for="name") Name:
             input#name.form-control( type="text", name="name" required="true" value=(undefined === manufacturer ? "" : manufacturer.name))
             label(for="description") Description:
-            input#description.form-control( type="text", name="description" required="true" value=(undefined === description ? "" : manufacturer.description))
+            textarea#description.form-control( type="text" rows="3" name="description" required="true" value=(undefined === description ? "" : manufacturer.description))
         if isUpdating
             label(for="password") Password:
             input(type="password" name="password" id="password" required="true" )

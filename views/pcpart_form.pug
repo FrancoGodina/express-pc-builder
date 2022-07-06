@@ -9,29 +9,33 @@ block content
             input#name.form-control( type="text", name="name" required="true" value=(undefined === part ? "" : part.name))
 
             label(for="description") Description:
-            input#description.form-control(type="text", name="description" required="true" value=(undefined === part ? "" : part.description))
+            textarea#description.form-control(type="text" rows="3" name="description" required="true" value=(undefined === part ? "" : part.description))
 
-            label(for="stock") Stock:
-                input#stock.form-control(type="number" name="stock" required="true")
-            br
-            label(for="price") Price:
-                input#price.form-control(type="number" name="price" required="true")
-            br
-            label(for="category") Category:
-            select#category.form-control( type="select" name="category" placeholder="Select category" required="true")
-                each category in categories
-                    if part
-                        option(value=category._id selected=(category._id.toString()===part.category._id.toString() ? "selected" : false) ) #{category.title}
-                    else
-                        option(value=category._id) #{category.title}
+            div.row
+                div.col
+                    label(for="stock") Stock:
+                    input#stock.form-control(type="number" name="stock" required="true")
+                div.col
+                    label(for="price") Price:
+                    input#price.form-control(type="number" name="price" required="true")
 
-            label(for="manufacturer") Manufacturer:
-            select#manufacturer.form-control( type="select" name="manufacturer" placeholder="Select manufacturer" required="true")
-                each manufacturer in manufacturers
-                    if part
-                        option(value=manufacturer._id selected=(manufacturer._id.toString() === part.manufacturer._id.toString() ? "selected" : false)) #{manufacturer.name}
-                    else
-                        option(value=manufacturer._id) #{manufacturer.name}
+            div.row
+                div.col
+                    label(for="category") Category:
+                    select#category.form-control( type="select" name="category" placeholder="Select category" required="true")
+                        each category in categories
+                            if part
+                                option(value=category._id selected=(category._id.toString()===part.category._id.toString() ? "selected" : false) ) #{category.title}
+                            else
+                                option(value=category._id) #{category.title}
+                div.col
+                    label(for="manufacturer") Manufacturer:
+                    select#manufacturer.form-control( type="select" name="manufacturer" placeholder="Select manufacturer" required="true")
+                        each manufacturer in manufacturers
+                            if part
+                                option(value=manufacturer._id selected=(manufacturer._id.toString() === part.manufacturer._id.toString() ? "selected" : false)) #{manufacturer.name}
+                            else
+                                option(value=manufacturer._id) #{manufacturer.name}
         button.btn.btn-primary(type='submit') Submit
 
     if errors

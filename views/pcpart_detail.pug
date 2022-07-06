@@ -3,7 +3,7 @@ extends layout
 block content
     h1= pcpart.name
 
-    a(href=pcpart.url+"/update") Update part 
+    a(href=pcpart.url+"/update" style="margin-right: 20px") Update part 
     a(href=pcpart.url+"/delete") Delete part
 
     p #[strong Description:] #{pcpart.description}
